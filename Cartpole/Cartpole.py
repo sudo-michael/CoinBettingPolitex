@@ -20,8 +20,9 @@ import numpy as np
 #                                     4. Cart and Pole                                      #
 #############################################################################################
 
+
 class CartPoleEnvironment:
-    '''
+    r"""
     Observation:
         Type: Box(4)
         Num     Observation               Min                     Max
@@ -47,19 +48,18 @@ class CartPoleEnvironment:
         Cart Position is more than 2.4 (center of the cart reaches the edge of
         the display).
         Episode length is greater than 200.
-    '''
+    """
 
     def __init__(self):
-
         self.gravity = 9.8
         self.masscart = 1.0
         self.masspole = 0.1
-        self.total_mass = (self.masspole + self.masscart)
+        self.total_mass = self.masspole + self.masscart
         self.length = 0.5  # actually half the pole's length
-        self.polemass_length = (self.masspole * self.length)
+        self.polemass_length = self.masspole * self.length
         self.force_mag = 10.0
         self.tau = 0.02  # seconds between state updates
-        self.kinematics_integrator = 'euler'
+        self.kinematics_integrator = "euler"
 
         # Angle at which to fail the episode
         self.theta_threshold_radians = 12 * 2 * math.pi / 360
@@ -80,21 +80,18 @@ class CartPoleEnvironment:
     def is_state_valid(self, state):
         x, _, theta, _ = state
         # Velocities aren't bounded, therefore cannot be checked.
-        is_state_invalid = bool(
-            x < -4.8
-            or x > 4.8
-            or theta < -0.418
-            or theta > 0.418
-        )
+        is_state_invalid = bool(x < -4.8 or x > 4.8 or theta < -0.418 or theta > 0.418)
         return not is_state_invalid
 
     def is_constraint1_violated(self, state):
         """Constraint 1"""
         x, _, _, _ = state
-        is_constraint_violated = bool(x >= -2.4 and x <= -2.2) or \
-                                 bool(x >= -1.3 and x <= -1.1) or \
-                                 bool(x >= 1.1 and x <= 1.3) or \
-                                 bool(x >= 2.2 and x <= 2.4)
+        is_constraint_violated = (
+            bool(x >= -2.4 and x <= -2.2)
+            or bool(x >= -1.3 and x <= -1.1)
+            or bool(x >= 1.1 and x <= 1.3)
+            or bool(x >= 2.2 and x <= 2.4)
+        )
         return is_constraint_violated
 
     def is_constraint2_violated(self, state):
@@ -103,7 +100,9 @@ class CartPoleEnvironment:
         """
         _, _, theta, _ = state
         theta_threshold = 4 * 2 * math.pi / 360
-        is_constraint_violated = bool(theta > theta_threshold) or bool(theta < -theta_threshold)
+        is_constraint_violated = bool(theta > theta_threshold) or bool(
+            theta < -theta_threshold
+        )
         return is_constraint_violated
 
     def step(self, state, action):
@@ -114,12 +113,15 @@ class CartPoleEnvironment:
 
         # For the interested reader:
         # https://coneural.org/florian/papers/05_cart_pole.pdf
-        temp = (force + self.polemass_length * theta_dot ** 2 * sintheta) / self.total_mass
+        temp = (
+            force + self.polemass_length * theta_dot**2 * sintheta
+        ) / self.total_mass
         thetaacc = (self.gravity * sintheta - costheta * temp) / (
-                self.length * (4.0 / 3.0 - self.masspole * costheta ** 2 / self.total_mass))
+            self.length * (4.0 / 3.0 - self.masspole * costheta**2 / self.total_mass)
+        )
         xacc = temp - self.polemass_length * thetaacc * costheta / self.total_mass
 
-        if self.kinematics_integrator == 'euler':
+        if self.kinematics_integrator == "euler":
             x = x + self.tau * x_dot
             x_dot = x_dot + self.tau * xacc
             theta = theta + self.tau * theta_dot
@@ -159,10 +161,7 @@ class CartPoleEnvironment:
 
     def is_state_valid(self, state):
         x, _, theta, _ = state
-        is_state_invalid = bool(
-            x < -4.8 or x > 4.8
-            or theta < -0.418 or theta > 0.418
-        )
+        is_state_invalid = bool(x < -4.8 or x > 4.8 or theta < -0.418 or theta > 0.418)
         return not is_state_invalid
 
     def is_state_over_bounds(self, state):

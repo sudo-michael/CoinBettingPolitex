@@ -1,0 +1,19 @@
+[project]
+name = "coinbettingpolitex"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "basedpyright>=1.29.1",
+    "numpy>=2.2.5",
+    "scipy>=1.15.2",
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = 'off'
+
+[dependency-groups]
+dev = ["basedpyright>=1.28.2"]
