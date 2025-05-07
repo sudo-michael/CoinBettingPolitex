@@ -6,7 +6,7 @@ jobname='GDA'
 Lr_p=(0.1 0.01 0.001 0.0001)
 Lr_l=(0.1 0.01 0.001 0.0001)
 samples=(50)
-entrop_coeffs=(0.001 0.01 0.1 0.0)
+entrop_coeffs=(0.0)
 cmdp=1
 for entropy in "${entrop_coeffs[@]}"
 do
@@ -16,10 +16,7 @@ do
     do
       for lrl in "${Lr_l[@]}"
       do
-        for run in {1..5}
-        do
-          sbatch -J $jobname ./run_GDA.sh $iters $run $lrp $lrl $sample $entropy $cmdp
-        done
+          sbatch -J $jobname ./run_GDA.sh $iters $lrp $lrl $sample $entropy $cmdp
       done
     done
   done
